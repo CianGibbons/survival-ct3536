@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        //initialize the health and armor bars
         HealthBar.SetMaxHealth(maxHealth);
         ArmorBar.SetMaxHealth(maxArmor);
     }
@@ -72,5 +73,24 @@ public class Player : MonoBehaviour
     {
         // instantiating a bullet at the firing point position (top of gun) with the same rotation as the firing point
         GameObject bullet = Instantiate(bulletPrefab, firingPoint.position, firingPoint.rotation);
+    }
+
+    public void TakeDamage(float enemyStrength)
+    {
+        float damageToBeTaken = enemyStrength; // set the damage to be taken by the player to be the strength of the enemy
+        if (ArmorBar.hasRemainingHealth()) // if there is still health left in the armor bar (i.e. there is still armor left on the player)
+        {
+            float ArmorLeft = ArmorBar.GetHealth(); // get the amount of armor that is left 
+            if(enemyStrength >= ArmorLeft) // if the enemy strength is big enough to destroy the armor
+            {
+                damageToBeTaken = damageToBeTaken - ArmorLeft; // take the amount of damage that the armor sustains off the damage to be taken
+                ArmorBar.Damage(ArmorLeft); // take the last sustainable amount of damage off the armor bar
+            } else // if the armor can take all of the damage given by the enemy 
+            {
+                ArmorBar.Damage(damageToBeTaken); // take the damage from the enemy and decrement the armor bar
+                damageToBeTaken = 0; // set the damage left to be taken to be 0 to ensure no more damage is taken
+            }
+        }
+        HealthBar.Damage(damageToBeTaken); // take any remaining damage on the health bar (at this stage the armor has been depleted)
     }
 }

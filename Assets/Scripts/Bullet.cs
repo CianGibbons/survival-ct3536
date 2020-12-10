@@ -27,6 +27,7 @@ public class Bullet : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // instantiate an explosion at the bullets current position, with the natural rotation of the explosion (it doesnt really matter what rotation the explosion has)
+        
         GameObject explosion1 = Instantiate(explosion, transform.position, Quaternion.identity);
         Destroy(gameObject); // destroy the bullet
         Destroy(explosion1, 0.7f);// destroy the explosion object after 1 seconda
@@ -34,7 +35,7 @@ public class Bullet : MonoBehaviour
 
     }
 
-    public float GetBulletStrength()
+    public float GetBulletStrength() // getter method for the strength of the bullet
     {
         return bulletStrength;
     }
