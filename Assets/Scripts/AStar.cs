@@ -211,6 +211,22 @@ public class AStar
         return neighbouringSquares;
     }
 
+    private List<Square> PathToDest(Square destination)
+    {
+        // Each Square has stored the square that it came from so if we start from the destination square we can work backwards to create our path
+        List<Square> path = new List<Square>(); // initialise a list of squares
+        path.Add(destination); // add the destination to the list -  keep in mind we are working backwards from the destination to the start as in this linked list we stored the previous square in each square
+        Square current = destination; // start with the current square being the destination node
+        while (current.previousSquare != null) // the starting square doesnt have a previous square, we can use this to identify when we have reached the starting square
+        {
+            path.Add(current.previousSquare); // add the square that came before the current to the path
+            current = current.previousSquare; // reset the current to move back in the list
+
+        }
+        path.Reverse(); // our path is currently backwards, so we have to reverse it so that it is working from start to destination, not destination to start
+        return path; // return the path in the correct order.
+    }
+
     private int CalculateDistToDestCost(Square start, Square dest) // the distance to the destination square
     {
 
@@ -221,19 +237,5 @@ public class AStar
         return StraightMoveCost * distToGo + DiagonalMoveCost * Mathf.Min(distX, distY); // return the calculation of the distance keeping in mind the cost of the move
     }
 
-    private List<Square> PathToDest(Square destination)
-    {
-        // Each Square has stored the square that it came from so if we start from the destination square we can work backwards to create our path
-        List<Square> path = new List<Square>(); // initialise a list of squares
-        path.Add(destination); // add the destination to the list -  keep in mind we are working backwards from the destination to the start as in this linked list we stored the previous square in each square
-        Square current = destination; // start with the current square being the destination node
-        while(current.previousSquare != null) // the starting square doesnt have a previous square, we can use this to identify when we have reached the starting square
-        {
-            path.Add(current.previousSquare); // add the square that came before the current to the path
-            current = current.previousSquare; // reset the current to move back in the list
-
-        }
-        path.Reverse(); // our path is currently backwards, so we have to reverse it so that it is working from start to destination, not destination to start
-        return path; // return the path in the correct order.
-    }
+    
 }

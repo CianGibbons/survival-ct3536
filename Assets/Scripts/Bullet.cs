@@ -5,7 +5,7 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public float bulletSpeed;
-    public GameObject explosion;
+    //public GameObject explosion;
 
     public float bulletStrength;
 
@@ -18,19 +18,15 @@ public class Bullet : MonoBehaviour
         //Destroy(gameObject,10f); // destroy bullet after 10seconds if it hasnt collided with anything
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // instantiate an explosion at the bullets current position, with the natural rotation of the explosion (it doesnt really matter what rotation the explosion has)
+        // i had explosion working - took it out as didnt want to use external explosion asset
         
-        GameObject explosion1 = Instantiate(explosion, transform.position, Quaternion.identity);
+        //GameObject explosion1 = Instantiate(explosion, transform.position, Quaternion.identity);
         Destroy(gameObject); // destroy the bullet
-        Destroy(explosion1, 0.7f);// destroy the explosion object after 1 seconda
+        //Destroy(explosion1, 0.7f);// destroy the explosion object after 1 seconda
 
 
     }

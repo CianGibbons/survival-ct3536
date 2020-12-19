@@ -9,6 +9,7 @@ public class Square
     public int x, y, g, f , h;
     public bool canWalkOnSquare;
     public Square previousSquare;
+
     // F is the estimated cost from start to the destination node  via this node
     // G is the known cost from the start to the current node
     // H is the estimated cost from this node to the destination node

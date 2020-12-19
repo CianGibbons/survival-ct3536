@@ -17,6 +17,9 @@ public class Enemy : MonoBehaviour
     EnemyMovement MovementSystem;
     float viewDistance;
 
+    // keeping a list of all the current enemies alive
+    private static List<GameObject> enemies = new List<GameObject>();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,6 +29,8 @@ public class Enemy : MonoBehaviour
         targetRB = player.GetComponent<Rigidbody2D>(); // get the rigidbody of the player so we can use it for the rotation
         MovementSystem = transform.parent.gameObject.GetComponent<EnemyMovement>(); // get the movement system so that we can access it in this script
         viewDistance = MovementSystem.viewDistance; // get the view distance from the movement system
+        
+        enemies.Add(this.transform.parent.gameObject);
     }
 
     // Update is called once per frame
@@ -48,7 +53,7 @@ public class Enemy : MonoBehaviour
             //Vector3 OriginalPosition = transform.position;
             //transform.position = player.transform.position + direction * 10f * Time.deltaTime; // 10 is the attackSpeed
 
-            //ATTACK IN HERE
+         
 
             //transform.position = OriginalPosition + direction*-1f * 10f * Time.deltaTime;
 
@@ -78,8 +83,13 @@ public class Enemy : MonoBehaviour
             TakeDamage(bulletStrength); // upon the collision of the bullet, take damage from the bullet. 
             //Debug.Log(bulletStrength);
 
-            if(HealthBar.GetHealth() <= 0) Destroy(this.gameObject.transform.parent.gameObject); // if the enemy's health runs out, destroy the enemy
-
+            if (HealthBar.GetHealth() <= 0)
+            {
+                GameManager.SetScore(GameManager.score + 100);
+                enemies.Remove(this.transform.parent.gameObject);
+                Debug.Log("Enemies Present: " + enemies.Count);
+                Destroy(this.gameObject.transform.parent.gameObject); // if the enemy's health runs out, destroy the enemy
+            }
             //Destroy(collision.gameObject); // destroy bullet
         }
     }
@@ -102,6 +112,20 @@ public class Enemy : MonoBehaviour
     }
 
     
+    public static void DestroyAllEnemies()
+    {
+        //destroying all gameobjects within enemies
+        foreach(GameObject go in enemies)
+        {
+            Destroy(go);
+        }
+        // clearing the list of gameobjects as all of these gameobjects have been destroyed
+        enemies.Clear();
+    }
+
+    public static List<GameObject> GetList() {
+        return enemies;
+    }
 
 
 }

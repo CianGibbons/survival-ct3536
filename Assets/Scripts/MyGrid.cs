@@ -84,4 +84,8 @@ public class MyGrid
         Vector2 v = GetXAndY(worldPos);
         SetGridSquare((int) v.x, (int) v.y, square);
     }
+
+    public override string ToString() {
+        return "Grid Width: "+ width +"\nGrid Height: "+height;
+    }
 }

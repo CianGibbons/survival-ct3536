@@ -6,22 +6,31 @@ public class Player : MonoBehaviour
 {
     public float moveSpeed;
     public float maxHealth;
-    public float maxArmor;
+    public float maxArmour;
     public Rigidbody2D rb;
-    public Camera gameCamera;
     private Vector2 move;
     private Vector2 mousePosition;
     public Transform firingPoint;
     public GameObject bulletPrefab;
-    public BarManager HealthBar;
-    public BarManager ArmorBar;
+    public GameObject PlayerBarsPrefab;
     
+    public static GameObject PlayerBars;
+
+    private BarManager HealthBar;
+    private BarManager ArmourBar;
+    
+
+
 
     private void Start()
     {
         //initialize the health and armor bars
+        PlayerBars = Instantiate(this.PlayerBarsPrefab) as GameObject;
+        HealthBar = PlayerBars.transform.GetChild(0).gameObject.GetComponent<BarManager>();
+        ArmourBar = PlayerBars.transform.GetChild(2).gameObject.GetComponent<BarManager>();
+        
         HealthBar.SetMaxHealth(maxHealth);
-        ArmorBar.SetMaxHealth(maxArmor);
+        ArmourBar.SetMaxHealth(maxArmour);
     }
 
     // Update is called once per frame
@@ -32,7 +41,7 @@ public class Player : MonoBehaviour
         move.x = Input.GetAxisRaw("Horizontal");
 
         //getting the position of the mouse in relation to the world rather than the screen
-        mousePosition = gameCamera.ScreenToWorldPoint(Input.mousePosition);
+        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         // if mouse1 is clicked down 
         if(Input.GetButtonDown("Fire1")) // Fire1 is a preset made by Unity for mouse1
@@ -78,19 +87,32 @@ public class Player : MonoBehaviour
     public void TakeDamage(float enemyStrength)
     {
         float damageToBeTaken = enemyStrength; // set the damage to be taken by the player to be the strength of the enemy
-        if (ArmorBar.hasRemainingHealth()) // if there is still health left in the armor bar (i.e. there is still armor left on the player)
+        if (ArmourBar.hasRemainingHealth()) // if there is still health left in the armor bar (i.e. there is still armor left on the player)
         {
-            float ArmorLeft = ArmorBar.GetHealth(); // get the amount of armor that is left 
-            if(enemyStrength >= ArmorLeft) // if the enemy strength is big enough to destroy the armor
+            float ArmourLeft = ArmourBar.GetHealth(); // get the amount of armor that is left 
+            if(enemyStrength >= ArmourLeft) // if the enemy strength is big enough to destroy the armor
             {
-                damageToBeTaken = damageToBeTaken - ArmorLeft; // take the amount of damage that the armor sustains off the damage to be taken
-                ArmorBar.Damage(ArmorLeft); // take the last sustainable amount of damage off the armor bar
+                damageToBeTaken = damageToBeTaken - ArmourLeft; // take the amount of damage that the armor sustains off the damage to be taken
+                ArmourBar.Damage(ArmourLeft); // take the last sustainable amount of damage off the armor bar
             } else // if the armor can take all of the damage given by the enemy 
             {
-                ArmorBar.Damage(damageToBeTaken); // take the damage from the enemy and decrement the armor bar
+                ArmourBar.Damage(damageToBeTaken); // take the damage from the enemy and decrement the armor bar
                 damageToBeTaken = 0; // set the damage left to be taken to be 0 to ensure no more damage is taken
             }
         }
         HealthBar.Damage(damageToBeTaken); // take any remaining damage on the health bar (at this stage the armor has been depleted)
+
+
+
+        if(HealthBar.GetHealth() <= 0)
+        {
+            //Dead - call GameOver()
+            GameManager.GameOver();
+        }
+    }
+
+    public void HealArmour(int Armour)
+    {
+        ArmourBar.Heal(Armour);
     }
 }

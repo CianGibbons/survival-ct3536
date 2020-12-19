@@ -78,7 +78,7 @@ public class EnemyMovement : MonoBehaviour
 
             //?? MIGHT NEED TO ASK A QUESTION HERE??//
             //if (Vector3.Distance(transform.position, target) > 1f)
-            if (DistanceToPlayer() > 2.5f) // if the distance to the player is greater than 2.5f 
+            if (DistanceToPlayer() > 2f) // if the distance to the player is greater than 2.5f 
             {
                 Vector3 direction = (target - transform.position).normalized; // get the normalized directional vector to the target
                 transform.position = transform.position + direction * moveSpeed * Time.deltaTime; // move towards the target at moveSpeed speed
