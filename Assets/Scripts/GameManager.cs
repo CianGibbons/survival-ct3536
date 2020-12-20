@@ -58,7 +58,6 @@ public class GameManager : MonoBehaviour
         SetGameState(GAMESTATES.MENU);
 
 
-
     }
 
     private void Update()
@@ -79,17 +78,18 @@ public class GameManager : MonoBehaviour
 
     private void StartGame()
     {
-        wave = 1;
+        wave = 0;
         SetGameState(GAMESTATES.PLAYING);
         score = 0;
         SpawnPlayer();
-        StartCoroutine(SpawnEnemy(4 * wave));
-        Debug.Log(Enemy.GetList().Count);
-
+        NextWave();
     }
 
     private void NextWave()
     {
+        wave++;
+        StartCoroutine(SpawnEnemy(4 * wave));
+
     }
 
 
@@ -114,8 +114,7 @@ public class GameManager : MonoBehaviour
         Destroy(Player.PlayerBars);
         Destroy(player.gameObject);
         
-        // Set Game State to Menu
-        //SetGameState(GAMESTATES.MENU);
+       
 
         // Set the Camera back to its position
         CameraController.SetCameraPosition(new Vector3(88.7f, 54.6f, -131.8168f));
@@ -132,9 +131,7 @@ public class GameManager : MonoBehaviour
             // hide better luck next time text
             instance.GameOverCanvas.transform.GetChild(3).gameObject.SetActive(false);
 
-            // receive input
-
-            
+          
 
         } else
         {

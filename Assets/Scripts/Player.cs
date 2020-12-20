@@ -11,14 +11,20 @@ public class Player : MonoBehaviour
     private Vector2 move;
     private Vector2 mousePosition;
     public Transform firingPoint;
-    public GameObject bulletPrefab;
+    
+    public GameObject level1BulletPrefab;
+    public GameObject level2BulletPrefab;
+    public GameObject level3BulletPrefab;
+
     public GameObject PlayerBarsPrefab;
     
     public static GameObject PlayerBars;
 
     private BarManager HealthBar;
     private BarManager ArmourBar;
-    
+    private GameObject bulletPrefab;
+    private int currentWeaponLevel;
+
 
 
 
@@ -28,9 +34,10 @@ public class Player : MonoBehaviour
         PlayerBars = Instantiate(this.PlayerBarsPrefab) as GameObject;
         HealthBar = PlayerBars.transform.GetChild(0).gameObject.GetComponent<BarManager>();
         ArmourBar = PlayerBars.transform.GetChild(2).gameObject.GetComponent<BarManager>();
-        
+        currentWeaponLevel = 1;
         HealthBar.SetMaxHealth(maxHealth);
         ArmourBar.SetMaxHealth(maxArmour);
+        bulletPrefab = level1BulletPrefab;
     }
 
     // Update is called once per frame
@@ -111,8 +118,25 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void HealArmour(int Armour)
+    public void HealArmour(int armour)
     {
-        ArmourBar.Heal(Armour);
+        ArmourBar.Heal(armour);
+    }
+
+    public void Heal(int health)
+    {
+        HealthBar.Heal(health);
+    }
+
+    public void UpgradeWeapon()
+    {
+        currentWeaponLevel++;
+        switch(currentWeaponLevel)
+        {
+            case 1: bulletPrefab = level1BulletPrefab; break;
+            case 2: bulletPrefab = level2BulletPrefab; break;
+            case 3: bulletPrefab = level3BulletPrefab; break;
+        }
+        
     }
 }

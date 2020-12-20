@@ -169,6 +169,10 @@ MonoBehaviour:
   maxHealth: 100
   HealthBar: {fileID: 6759560492970740641}
   enemyStrength: 8
+  armourBoost: {fileID: 4631382481874747551, guid: 332b466cf102e9a4299da192ea557e91,
+    type: 3}
+  healthBoost: {fileID: 8318253679254636391, guid: 3d1b39900ec81c44b87d37c3768a92e2,
+    type: 3}
 --- !u!60 &2938483415970885041
 PolygonCollider2D:
   m_ObjectHideFlags: 0

@@ -123,7 +123,11 @@ MonoBehaviour:
   maxArmour: 100
   rb: {fileID: 8024903697844159634}
   firingPoint: {fileID: 8024903698840974876}
-  bulletPrefab: {fileID: 5287229397787992606, guid: 82b29e6ae640c48979448ffa5d5da3ae,
+  level1BulletPrefab: {fileID: 5287229397787992606, guid: 82b29e6ae640c48979448ffa5d5da3ae,
+    type: 3}
+  level2BulletPrefab: {fileID: 7334221894776762879, guid: cf87918f7e54cbf4dbd494a5a6853ffd,
+    type: 3}
+  level3BulletPrefab: {fileID: 4410125268599245377, guid: 2199ecf8f1f692d44bf995ecb44210fe,
     type: 3}
   PlayerBarsPrefab: {fileID: 5168629687967197503, guid: 037b398b7816a42bd8cdec139d4a7f15,
     type: 3}

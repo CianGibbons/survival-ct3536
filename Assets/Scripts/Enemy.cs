@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +9,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float maxHealth;
     [SerializeField] private BarManager HealthBar;
     [SerializeField] private float enemyStrength;
+    [SerializeField] private GameObject armourBoost;
+    [SerializeField] private GameObject healthBoost;
     
     private float lastAttackingTime = 0f;
     
@@ -89,9 +92,38 @@ public class Enemy : MonoBehaviour
                 enemies.Remove(this.transform.parent.gameObject);
                 Debug.Log("Enemies Present: " + enemies.Count);
                 Destroy(this.gameObject.transform.parent.gameObject); // if the enemy's health runs out, destroy the enemy
+
+                System.Random randomizer = new System.Random();
+                int chanceOfBoost = randomizer.Next(100); // get random number between 0 and 99;
+                if(chanceOfBoost >= 75) // if the number is greater or equal to 75, spawn a boost
+                {
+                    SpawnBoost(); // spawn a boost - be it health or armour
+                }
+                
             }
-            //Destroy(collision.gameObject); // destroy bullet
+            //Destroy(collision.gameObject); // destroy bullet - this was moved to bullet script
         }
+    }
+
+    private void SpawnBoost()
+    {
+        System.Random randomizer = new System.Random();
+        int option = randomizer.Next(2); // get random number either 0 or 1
+        //1 - Armour
+        //0 - Health
+        GameObject boost; // declare the game object
+        switch (option) // switch case where case 0 is health boost and case 1 is armour boost
+        {
+            case 0:
+                boost = Instantiate(healthBoost) as GameObject; // instantiate gameobject
+                boost.transform.position = transform.position; // set position
+                break;
+            case 1:
+                boost = Instantiate(armourBoost) as GameObject; // instantiate gameobject
+                boost.transform.position = transform.position; // set positon
+                break;
+        }
+        
     }
 
     private void Attack()
