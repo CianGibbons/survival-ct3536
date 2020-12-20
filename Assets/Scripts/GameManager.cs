@@ -20,6 +20,8 @@ public class GameManager : MonoBehaviour
     public GameObject playerSpawnPosition;
     public GameObject enemySpawnPoints;
     public TMP_Text txtScore;
+    public TMP_Text txtWeaponLevel;
+    public TMP_Text txtWaveNumber;
     public Button playButton;
     public Button leaderboardButton;
     public Button leaderboardReturnButton;
@@ -37,6 +39,11 @@ public class GameManager : MonoBehaviour
     public static int score = 0;
     private static int wave = 1;
     private static Leaderboard leaderboard;
+    
+    
+    private static int weaponLevel;
+
+    private bool isPlaying = false;
 
 
     // Start is called before the first frame update
@@ -62,6 +69,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        
         /*
         //used for testing purposes to get the x and y coorindates of a square that gets clicked on.
         if (Input.GetButtonDown("Fire1"))
@@ -74,21 +82,49 @@ public class GameManager : MonoBehaviour
             Debug.Log(s.x + ", " + s.y + "   -   Walkable: " + s.canWalkOnSquare);
         }
         */
+        if (instance.isPlaying) {
+            if (Enemy.GetList().Count == 0)
+            {
+                NextWave();
+            }
+            if (score > 1500 && weaponLevel == 1)
+            {
+                weaponLevel++;
+                txtWeaponLevel.text = "Weapon Level: " + weaponLevel;
+                player.UpgradeWeapon();
+            }
+            if (score > 5000 && weaponLevel == 2)
+            {
+                weaponLevel++;
+                txtWeaponLevel.text = "Weapon Level: " + weaponLevel;
+                player.UpgradeWeapon();
+            }
+        }
     }
 
     private void StartGame()
     {
+        //Debug.Log(wave);
+        weaponLevel = 1;
+        instance.isPlaying = true;
         wave = 0;
+        //Debug.Log(wave);
         SetGameState(GAMESTATES.PLAYING);
         score = 0;
-        SpawnPlayer();
         NextWave();
+        //Debug.Log(wave);
+        SpawnPlayer();
     }
 
     private void NextWave()
     {
-        wave++;
-        StartCoroutine(SpawnEnemy(4 * wave));
+        //Debug.Log(wave);
+        txtWaveNumber.text = "Wave Number: " + wave;
+        wave = wave + 1;
+        //Debug.Log(wave);
+        
+        StartCoroutine(SpawnEnemy(2 * wave + 3));
+        
 
     }
 
@@ -107,14 +143,15 @@ public class GameManager : MonoBehaviour
 
     public static void GameOver()
     {
+
         // Destroy all Enemies
         Enemy.DestroyAllEnemies();
 
         //Destroy Player
         Destroy(Player.PlayerBars);
         Destroy(player.gameObject);
-        
-       
+
+        instance.isPlaying = false;
 
         // Set the Camera back to its position
         CameraController.SetCameraPosition(new Vector3(88.7f, 54.6f, -131.8168f));
@@ -165,10 +202,11 @@ public class GameManager : MonoBehaviour
             //Debug.Log(num);
             Vector3 spawnPoint = enemySpawnPoints.transform.GetChild(num).gameObject.transform.position; 
             GameObject enemy = Instantiate(enemyGameObject) as GameObject;
+            //Debug.Log("Enemy");
             enemy.transform.position = spawnPoint;
             
             yield return new WaitForSeconds(1f);
-            Debug.Log("Enemies Present: " + Enemy.GetList().Count);
+            //Debug.Log("Enemies Present: " + Enemy.GetList().Count);
         }
         
         yield break;
@@ -178,6 +216,7 @@ public class GameManager : MonoBehaviour
     {
         // Spawn Player
         GameObject p = Instantiate(playerPrefab) as GameObject; // instantiate player object
+        //Debug.Log("Player");
         p.transform.position = playerSpawnPosition.transform.position; // set the position of the object
         player = p.GetComponent<Player>(); // set the public Player script component
     }
@@ -195,6 +234,7 @@ public class GameManager : MonoBehaviour
             case GAMESTATES.PLAYING:
                 instance.TitlePageCanvas.SetActive(false);
                 instance.PlayingCanvas.SetActive(true);
+                instance.txtWeaponLevel.text = "Weapon Level: " + weaponLevel;
                 break;
         }
     }

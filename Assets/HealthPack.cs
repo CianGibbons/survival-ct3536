@@ -10,7 +10,7 @@ public class HealthPack : MonoBehaviour
     {
         if (collider.gameObject.tag == "Player")
         {
-            Debug.Log("collided");
+            
             collider.gameObject.GetComponent<Player>().Heal(healthValue);
             Destroy(this.gameObject);
         }

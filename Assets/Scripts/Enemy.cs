@@ -90,14 +90,14 @@ public class Enemy : MonoBehaviour
             {
                 GameManager.SetScore(GameManager.score + 100);
                 enemies.Remove(this.transform.parent.gameObject);
-                Debug.Log("Enemies Present: " + enemies.Count);
+                //Debug.Log("Enemies Present: " + enemies.Count);
                 Destroy(this.gameObject.transform.parent.gameObject); // if the enemy's health runs out, destroy the enemy
 
                 System.Random randomizer = new System.Random();
-                int chanceOfBoost = randomizer.Next(100); // get random number between 0 and 99;
+                int chanceOfBoost = randomizer.Next(101); // get random number between 0 and 100;
                 if(chanceOfBoost >= 75) // if the number is greater or equal to 75, spawn a boost
                 {
-                    SpawnBoost(); // spawn a boost - be it health or armour
+                    SpawnBoost(chanceOfBoost); // spawn a boost - be it health or armour
                 }
                 
             }
@@ -105,24 +105,23 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void SpawnBoost()
+    private void SpawnBoost(int chanceOfBoost)
     {
-        System.Random randomizer = new System.Random();
-        int option = randomizer.Next(2); // get random number either 0 or 1
-        //1 - Armour
-        //0 - Health
+        //chanceOfBoost is always between 75 and 100 inclusive
+        
         GameObject boost; // declare the game object
-        switch (option) // switch case where case 0 is health boost and case 1 is armour boost
+        if(chanceOfBoost <= 88) // less than or equal to 88 is a health boost
         {
-            case 0:
-                boost = Instantiate(healthBoost) as GameObject; // instantiate gameobject
-                boost.transform.position = transform.position; // set position
-                break;
-            case 1:
-                boost = Instantiate(armourBoost) as GameObject; // instantiate gameobject
-                boost.transform.position = transform.position; // set positon
-                break;
+            Debug.Log(chanceOfBoost + "Health Boost Spawned");
+            boost = Instantiate(healthBoost) as GameObject; // instantiate gameobject
+            boost.transform.position = transform.position; // set position
+        } else // greater than 88 is an armour boost
+        {
+            Debug.Log(chanceOfBoost + "Armour Boost Spawned");
+            boost = Instantiate(armourBoost) as GameObject; // instantiate gameobject
+            boost.transform.position = transform.position; // set positon
         }
+        
         
     }
 
