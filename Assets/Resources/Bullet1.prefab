@@ -13,10 +13,10 @@ GameObject:
   - component: {fileID: 3141308293078099408}
   - component: {fileID: -8621468314481908752}
   - component: {fileID: 4931321574953801093}
-  m_Layer: 0
-  m_Name: Bullet
+  m_Layer: 2
+  m_Name: Bullet1
   m_TagString: Bullet
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 2800000, guid: ea18b726d4edba349a084b5ff8bd36b0, type: 3}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -118,8 +118,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletSpeed: 20
-  explosion: {fileID: 8046824258451054616, guid: f66eba882c6d84532ae9e3dde58bde77,
-    type: 3}
   bulletStrength: 10
 --- !u!70 &4931321574953801093
 CapsuleCollider2D:

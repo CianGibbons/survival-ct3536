@@ -139,4 +139,13 @@ public class Player : MonoBehaviour
         }
         
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "EnemyBullet") // if the game object that was collided with has a tag called "EnemyBullet"
+        {
+            float bulletStrength = collision.gameObject.GetComponent<Bullet>().GetBulletStrength(); // get the strength of the bullet shot by the enemy
+            TakeDamage(bulletStrength);
+        }
+    }
 }

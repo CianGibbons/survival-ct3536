@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public GameObject TitlePageCanvas, PlayingCanvas, LeaderboardCanvas, GameOverCanvas;
     public GameObject playerPrefab;
     public GameObject enemyGameObject;
+    public GameObject longRangeEnemyGameObject;
     public GameObject playerSpawnPosition;
     public GameObject enemySpawnPoints;
     public TMP_Text txtScore;
@@ -37,13 +38,15 @@ public class GameManager : MonoBehaviour
     public static Player player;
     public static MyGrid grid;
     public static int score = 0;
-    private static int wave = 1;
+    private static int waveNumber = 0;
     private static Leaderboard leaderboard;
     
     
     private static int weaponLevel;
 
     private bool isPlaying = false;
+
+    private static int numberOfEnemiesSpawned = 0;
 
 
     // Start is called before the first frame update
@@ -82,10 +85,13 @@ public class GameManager : MonoBehaviour
             Debug.Log(s.x + ", " + s.y + "   -   Walkable: " + s.canWalkOnSquare);
         }
         */
+
+  
         if (instance.isPlaying) {
             if (Enemy.GetList().Count == 0)
             {
                 NextWave();
+               
             }
             if (score > 1500 && weaponLevel == 1)
             {
@@ -104,28 +110,23 @@ public class GameManager : MonoBehaviour
 
     private void StartGame()
     {
-        //Debug.Log(wave);
-        weaponLevel = 1;
-        instance.isPlaying = true;
-        wave = 0;
-        //Debug.Log(wave);
-        SetGameState(GAMESTATES.PLAYING);
+        waveNumber = 0;
         score = 0;
-        NextWave();
-        //Debug.Log(wave);
+        weaponLevel = 1;
+        SetGameState(GAMESTATES.PLAYING);
         SpawnPlayer();
+        NextWave();
+  
+        //used for testing purposes
+        //GameObject go = Instantiate(longRangeEnemyGameObject) as GameObject;
+        //go.transform.position = new Vector3(70,70);
     }
 
     private void NextWave()
     {
-        //Debug.Log(wave);
-        txtWaveNumber.text = "Wave Number: " + wave;
-        wave = wave + 1;
-        //Debug.Log(wave);
-        
-        StartCoroutine(SpawnEnemy(2 * wave + 3));
-        
-
+       
+        txtWaveNumber.text = "Wave Number: " + waveNumber;
+        StartCoroutine(SpawnEnemy(2));
     }
 
 
@@ -152,7 +153,7 @@ public class GameManager : MonoBehaviour
         Destroy(player.gameObject);
 
         instance.isPlaying = false;
-
+        instance.gameCamera.orthographicSize = 50f;
         // Set the Camera back to its position
         CameraController.SetCameraPosition(new Vector3(88.7f, 54.6f, -131.8168f));
 
@@ -194,14 +195,19 @@ public class GameManager : MonoBehaviour
 
     IEnumerator SpawnEnemy(int numberOfEnemies)
     {
+        waveNumber += 1;
+        numberOfEnemies = numberOfEnemies * waveNumber + 3;
         System.Random randomizer = new System.Random();
-
-        for(int i = 0; i < numberOfEnemies; i++)
+        GameObject enemy;
+        for (int i = 0; i < numberOfEnemies; i++)
         {
             int num = randomizer.Next(4); // creates a random number between 0 and 3 - because there are 4 enemy spawn points
             //Debug.Log(num);
-            Vector3 spawnPoint = enemySpawnPoints.transform.GetChild(num).gameObject.transform.position; 
-            GameObject enemy = Instantiate(enemyGameObject) as GameObject;
+            Vector3 spawnPoint = enemySpawnPoints.transform.GetChild(num).gameObject.transform.position;
+            if (numberOfEnemiesSpawned % 3 == 0) { enemy = Instantiate(longRangeEnemyGameObject) as GameObject; }
+            else { enemy = Instantiate(enemyGameObject) as GameObject; }
+            numberOfEnemiesSpawned++;
+            if(!instance.isPlaying) instance.isPlaying = true;
             //Debug.Log("Enemy");
             enemy.transform.position = spawnPoint;
             

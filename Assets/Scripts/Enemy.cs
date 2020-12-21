@@ -11,7 +11,10 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float enemyStrength;
     [SerializeField] private GameObject armourBoost;
     [SerializeField] private GameObject healthBoost;
-    
+    [SerializeField] private Transform firingPointTransform;
+    [SerializeField] private GameObject enemyBullet;
+    [SerializeField] private GameObject DeadBloodSplatter;
+    [SerializeField] private GameObject InjuredBloodSplatter;
     private float lastAttackingTime = 0f;
     
     GameObject player;
@@ -19,6 +22,8 @@ public class Enemy : MonoBehaviour
     Rigidbody2D targetRB;
     EnemyMovement MovementSystem;
     float viewDistance;
+
+    public bool CloseRangeEnemy;
 
     // keeping a list of all the current enemies alive
     private static List<GameObject> enemies = new List<GameObject>();
@@ -34,6 +39,8 @@ public class Enemy : MonoBehaviour
         viewDistance = MovementSystem.viewDistance; // get the view distance from the movement system
         
         enemies.Add(this.transform.parent.gameObject);
+
+        
     }
 
     // Update is called once per frame
@@ -56,21 +63,29 @@ public class Enemy : MonoBehaviour
             //Vector3 OriginalPosition = transform.position;
             //transform.position = player.transform.position + direction * 10f * Time.deltaTime; // 10 is the attackSpeed
 
-         
+
 
             //transform.position = OriginalPosition + direction*-1f * 10f * Time.deltaTime;
 
-            
-            
-            // Can attack every half of a second
-            if (lastAttackingTime + 0.5f <= Time.time)
+            if (CloseRangeEnemy)
             {
-                lastAttackingTime = Time.time; // set the last time that the enemy has attacked to be the time now
-                Attack(); // attack the player
-            }
+                // Can attack every half of a second
+                if (lastAttackingTime + 0.5f <= Time.time)
+                {
+                    lastAttackingTime = Time.time; // set the last time that the enemy has attacked to be the time now
+                    Attack(); // attack the player
+                }
+            } else
+            {
+                // Can attack every  second
+                if (lastAttackingTime + 1f <= Time.time)
+                {
+                    lastAttackingTime = Time.time; // set the last time that the enemy has attacked to be the time now
+                    //Attack(); // attack the player
 
-            
-            
+                    ShootAtPlayer();
+                }
+            }
 
         }
         
@@ -80,18 +95,25 @@ public class Enemy : MonoBehaviour
     {
         if (collision.gameObject.tag == "Bullet") // if the game object that was collided with has a tag called "Bullet"
         {
-            // get the mass of the asteroid that collided with the bullet.
-            // Lets call this asteroid the Master Asteroid.
+            
             float bulletStrength = collision.gameObject.GetComponent<Bullet>().GetBulletStrength(); // get the strength of the bullet shot by the player
             TakeDamage(bulletStrength); // upon the collision of the bullet, take damage from the bullet. 
             //Debug.Log(bulletStrength);
+            GameObject blood1 = Instantiate(InjuredBloodSplatter, transform.position, transform.rotation) as GameObject;
+            Destroy(blood1, 1f);
 
             if (HealthBar.GetHealth() <= 0)
             {
-                GameManager.SetScore(GameManager.score + 100);
+                if (CloseRangeEnemy) { GameManager.SetScore(GameManager.score + 100); }
+                else { GameManager.SetScore(GameManager.score + 250); }
+                
                 enemies.Remove(this.transform.parent.gameObject);
                 //Debug.Log("Enemies Present: " + enemies.Count);
                 Destroy(this.gameObject.transform.parent.gameObject); // if the enemy's health runs out, destroy the enemy
+
+                GameObject blood = Instantiate(DeadBloodSplatter) as GameObject;
+                blood.transform.position = this.transform.position;
+                Destroy(blood,1f);
 
                 System.Random randomizer = new System.Random();
                 int chanceOfBoost = randomizer.Next(101); // get random number between 0 and 100;
@@ -101,7 +123,6 @@ public class Enemy : MonoBehaviour
                 }
                 
             }
-            //Destroy(collision.gameObject); // destroy bullet - this was moved to bullet script
         }
     }
 
@@ -112,12 +133,12 @@ public class Enemy : MonoBehaviour
         GameObject boost; // declare the game object
         if(chanceOfBoost <= 88) // less than or equal to 88 is a health boost
         {
-            Debug.Log(chanceOfBoost + "Health Boost Spawned");
+            //Debug.Log(chanceOfBoost + "Health Boost Spawned");
             boost = Instantiate(healthBoost) as GameObject; // instantiate gameobject
             boost.transform.position = transform.position; // set position
         } else // greater than 88 is an armour boost
         {
-            Debug.Log(chanceOfBoost + "Armour Boost Spawned");
+            //Debug.Log(chanceOfBoost + "Armour Boost Spawned");
             boost = Instantiate(armourBoost) as GameObject; // instantiate gameobject
             boost.transform.position = transform.position; // set positon
         }
@@ -158,5 +179,9 @@ public class Enemy : MonoBehaviour
         return enemies;
     }
 
+    public void ShootAtPlayer()
+    {
+        GameObject bullet = Instantiate(enemyBullet, firingPointTransform.position, firingPointTransform.rotation);
+    }
 
 }

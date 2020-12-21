@@ -1705,8 +1705,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 938, y: 529}
+  m_AnchoredPosition: {x: -5.7, y: -9.1}
+  m_SizeDelta: {x: 995.8169, y: 573.6017}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &422923349
 MonoBehaviour:
@@ -2073,6 +2073,8 @@ MonoBehaviour:
     type: 3}
   enemyGameObject: {fileID: 3305578835964727113, guid: 37c32e93b362d414ea0e99a24346487e,
     type: 3}
+  longRangeEnemyGameObject: {fileID: 2974994586167790303, guid: 6cf1dc33d9d149b4398fe1cd1f812803,
+    type: 3}
   playerSpawnPosition: {fileID: 4412434687932505190}
   enemySpawnPoints: {fileID: 590266317}
   txtScore: {fileID: 446504758}
@@ -2151,6 +2153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26293bdf918977641b9e9b0222996ea1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cam: {fileID: 519420031}
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -2178,7 +2181,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 48.331245
+  orthographic size: 49
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

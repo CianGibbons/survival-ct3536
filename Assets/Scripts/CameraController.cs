@@ -6,18 +6,20 @@ public class CameraController : MonoBehaviour
 {
     private GameObject target;
     public static CameraController instance;
-
+    public Camera cam;
     // Start is called before the first frame update
     void Start()
     {
         instance = this;
         //Initial Position - wont change until player is present
         this.transform.position = new Vector3(88.7f, 54.6f, -131.8168f);
-
+        cam.orthographicSize = 50f;
 
         // Find the player gameObject
         target = GameObject.FindWithTag("Player");
 
+        
+        
     }
 
     // Update is called once per frame
@@ -28,9 +30,12 @@ public class CameraController : MonoBehaviour
             target = GameObject.FindWithTag("Player");
         } else
         {
+            cam.orthographicSize = 20f;
             Vector3 PlayerPosition = target.transform.position;
-            PlayerPosition.z = transform.position.z;
+            PlayerPosition.z = transform.position.z; // same as default camera z
 
+           
+           
             // getting the direction we have to move the camera towards
             Vector3 moveCameraDirection = (PlayerPosition - transform.position).normalized;
             // getting the distance the camera has to move

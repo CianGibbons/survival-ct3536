@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6902823819796958607}
   - component: {fileID: 8937831822830062511}
   - component: {fileID: 3475785329236360666}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Bullet3
   m_TagString: Bullet
   m_Icon: {fileID: 0}
@@ -118,6 +118,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletSpeed: 26
+  bloodSplatter: {fileID: 3314081331204320504, guid: 2fa6186c3355fde4f8bcdeec09548405,
+    type: 3}
   bulletStrength: 20
 --- !u!70 &3475785329236360666
 CapsuleCollider2D:

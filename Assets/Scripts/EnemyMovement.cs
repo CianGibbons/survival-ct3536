@@ -8,15 +8,36 @@ public class EnemyMovement : MonoBehaviour
     private List<Vector3> pathToFollow;
     private int indexOfCurrentSquareOnList;
 
+    public Transform firingPointTransform;
+    public Rigidbody2D enemyRB;
+
     [SerializeField] private float moveSpeed;
     [SerializeField] private float attackingRange;
-    [SerializeField] private bool CloseRangeEnemy;
+    
+    public bool CloseRangeEnemy;
 
     GameObject player;
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindWithTag("Player"); // get the player gameobject for ease of access
+    }
+
+    
+    private bool CheckIfPlayerIsInSight()
+    {
+        Vector3 directionToPlayer = player.transform.position - firingPointTransform.position;
+        RaycastHit2D rayCastHit = Physics2D.Raycast(firingPointTransform.position, directionToPlayer);
+        //Debug.DrawRay(firingPointTransform.position, directionToPlayer);
+        if (rayCastHit.collider != null)
+        {
+            if(rayCastHit.collider.gameObject.tag == "Player")// if the player is in sight, return true
+            {
+                return true;
+            }
+           // bullets are ignored using the ignore raycast layer
+        }
+        return false;
     }
 
     // Update is called once per frame
@@ -44,10 +65,7 @@ public class EnemyMovement : MonoBehaviour
     }
 
     private void GetTarget()
-    {
-
-        
-        
+    {   
         //Debug.Log("MoveToPlayer() Called");
         indexOfCurrentSquareOnList = 0; // start at the first square in the list
         pathToFollow = AStar.instance.FindPath(transform.position, player.transform.position); // get the list of positional vectors to move to to get to the player
@@ -74,24 +92,41 @@ public class EnemyMovement : MonoBehaviour
         {
             Vector3 target = pathToFollow[indexOfCurrentSquareOnList]; // set the current target for the enemy to move towards
             //Debug.Log(DistanceToPlayer());
-
-
-            //?? MIGHT NEED TO ASK A QUESTION HERE??//
-            //if (Vector3.Distance(transform.position, target) > 1f)
-            if (DistanceToPlayer() > 2f) // if the distance to the player is greater than 2.5f 
+            if (CloseRangeEnemy)
             {
-                Vector3 direction = (target - transform.position).normalized; // get the normalized directional vector to the target
-                transform.position = transform.position + direction * moveSpeed * Time.deltaTime; // move towards the target at moveSpeed speed
-            }
-            else 
-            {
-                indexOfCurrentSquareOnList++; // increment 
-                if (indexOfCurrentSquareOnList >= pathToFollow.Count) // if the index is out of range
+                if (DistanceToPlayer() > 2f) // if the distance to the player is greater than 2f 
                 {
-                    // set the path to follow to null
-                    pathToFollow = null;
+                    Vector3 direction = (target - transform.position).normalized; // get the normalized directional vector to the target
+                    transform.position = transform.position + direction * moveSpeed * Time.deltaTime; // move towards the target at moveSpeed speed
+                }
+                else
+                {
+                    indexOfCurrentSquareOnList++; // increment 
+                    if (indexOfCurrentSquareOnList >= pathToFollow.Count) // if the index is out of range
+                    {
+                        // set the path to follow to null
+                        pathToFollow = null;
+                    }
+                }
+            } else
+            {
+                
+                if (DistanceToPlayer() > 15f || !CheckIfPlayerIsInSight()) // if the distance to the player is greater than 2f 
+                {
+                    Vector3 direction = (target - transform.position).normalized; // get the normalized directional vector to the target
+                    transform.position = transform.position + direction * moveSpeed * Time.deltaTime; // move towards the target at moveSpeed speed
+                }
+                else
+                {
+                    indexOfCurrentSquareOnList++; // increment 
+                    if (indexOfCurrentSquareOnList >= pathToFollow.Count) // if the index is out of range
+                    {
+                        // set the path to follow to null
+                        pathToFollow = null;
+                    }
                 }
             }
+            
         }
     }
 }
