@@ -130,7 +130,7 @@ public class GameManager : MonoBehaviour
     {
         
         waveNumber = 0; // initialize the wave number to 0
-        score = 0; // initialize the score to 0
+        SetScore(0); // initialize the score to 0
         weaponLevel = 1; // initialize the weapon level to 1
         SetGameState(GAMESTATES.PLAYING);
         SpawnPlayer();
