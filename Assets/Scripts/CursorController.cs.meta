@@ -3,7 +3,9 @@ guid: 6c3d9100822f0064b8f6f8e65a293fcd
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - crossHairCursor: {fileID: 2800000, guid: 66515aa66dd3c2647884167284bd368b, type: 3}
+  - navigationCursor: {fileID: 2800000, guid: e8c1e9d732a2fec45baed9c1ff335cce, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
