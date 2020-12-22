@@ -4,9 +4,16 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    private GameObject target;
+    // Class level variable
+    private GameObject target; // the gameobject target the camera is following
+    
+    // public instance of the CameraController
     public static CameraController instance;
-    public Camera cam;
+    
+    // inspector setting
+    [SerializeField] private Camera cam;
+    
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -17,9 +24,6 @@ public class CameraController : MonoBehaviour
 
         // Find the player gameObject
         target = GameObject.FindWithTag("Player");
-
-        
-        
     }
 
     // Update is called once per frame

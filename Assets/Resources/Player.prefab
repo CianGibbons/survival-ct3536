@@ -118,10 +118,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73cf47cf6fa544f17a7dedd16f80efa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 10
-  maxHealth: 100
-  maxArmour: 100
-  rb: {fileID: 8024903697844159634}
+  InjuredBloodSplatter: {fileID: 6611108002043724186, guid: 3b49bcf2c3407e84aab31daf92e752a1,
+    type: 3}
   firingPoint: {fileID: 8024903698840974876}
   level1BulletPrefab: {fileID: 5287229397787992606, guid: 82b29e6ae640c48979448ffa5d5da3ae,
     type: 3}
@@ -131,6 +129,12 @@ MonoBehaviour:
     type: 3}
   PlayerBarsPrefab: {fileID: 5168629687967197503, guid: 037b398b7816a42bd8cdec139d4a7f15,
     type: 3}
+  rb: {fileID: 8024903697844159634}
+  shootLaserSFX: {fileID: 8300000, guid: b5f3a57d2f9f3f447b301b09a17b7c2f, type: 3}
+  shootLaserSFXVolume: 0.295
+  moveSpeed: 10
+  maxHealth: 100
+  maxArmour: 100
 --- !u!60 &6605784363831057475
 PolygonCollider2D:
   m_ObjectHideFlags: 0

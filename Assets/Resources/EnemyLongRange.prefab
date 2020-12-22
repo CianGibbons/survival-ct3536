@@ -133,6 +133,12 @@ MonoBehaviour:
   InjuredBloodSplatter: {fileID: 6611108002043724186, guid: 3b49bcf2c3407e84aab31daf92e752a1,
     type: 3}
   CloseRangeEnemy: 0
+  shootLaserSFX: {fileID: 8300000, guid: b5f3a57d2f9f3f447b301b09a17b7c2f, type: 3}
+  shootLaserSFXVolume: 0.75
+  enemySplatSFX: {fileID: 8300000, guid: 2aa169414082e7e40ae29754d14abcd9, type: 3}
+  enemySplatSFXVolume: 0.75
+  meleeAttackSFX: {fileID: 8300000, guid: 20171a355f831c04d8fe73d7e84ac43a, type: 3}
+  meleeAttackSFXVolume: 1
 --- !u!60 &3193365192764680231
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -264,11 +270,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34d95e17027379d43889b1be7edaa12b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewDistance: 70
-  firingPointTransform: {fileID: 6679876875287571618}
-  enemyRB: {fileID: 2974994584643966235}
   moveSpeed: 7
   attackingRange: 16.1
+  firingPointTransform: {fileID: 6679876875287571618}
+  enemyRB: {fileID: 2974994584643966235}
+  viewDistance: 70
   CloseRangeEnemy: 0
 --- !u!1 &5905704955982613838
 GameObject:

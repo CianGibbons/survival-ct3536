@@ -3,12 +3,14 @@ using UnityEngine;
 
 public class HealthPack : MonoBehaviour
 {
-    private int healthValue = 10;
+    //inspector settings
+    [SerializeField] private int healthValue = 10;
+
+    // class level private variables
     private bool StartedExpiring = false;
     private float timeToLive = 10f;
     private float timeToFadeOut = 5f;
     private float timeToScaleDone = 6f;
-
     private float timeSpawned;
 
     private void Start()

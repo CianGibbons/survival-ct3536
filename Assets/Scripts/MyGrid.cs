@@ -25,7 +25,7 @@ public class MyGrid
         {
             for (int y = 0; y < grid.GetLength(1); y++)
             {
-                grid[x, y] = new Square(this, x, y); // create a new square in the grid at x, y
+                grid[x, y] = new Square(x, y); // create a new square in the grid at x, y
                 //Draw the bottom and left lines for the square in the grid
                 Debug.DrawLine(GetSquareWorldPosition(x, y), GetSquareWorldPosition(x, y + 1), Color.white, 100f);
                 Debug.DrawLine(GetSquareWorldPosition(x, y), GetSquareWorldPosition(x + 1, y), Color.white, 100f);

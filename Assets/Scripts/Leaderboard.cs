@@ -8,8 +8,8 @@ using TMPro;
 public class Leaderboard : MonoBehaviour
 {
     
-    public GameObject LinesInTheLeaderboard;
-    public GameObject LineInLeaderboard;
+    [SerializeField] private GameObject LinesInTheLeaderboard;
+    [SerializeField] private GameObject LineInLeaderboard;
 
     private List<LeaderboardLine> leaderboardLines;
 

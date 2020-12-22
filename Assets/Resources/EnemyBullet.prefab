@@ -118,9 +118,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletSpeed: 26
-  bloodSplatter: {fileID: 3314081331204320504, guid: 2fa6186c3355fde4f8bcdeec09548405,
-    type: 3}
   bulletStrength: 20
+  explosion: {fileID: 8195025270916579049, guid: 77e547d01da41404899a9be6be4a8855,
+    type: 3}
+  explosionSFX: {fileID: 8300000, guid: 5e5ca07c7b4de994196a84f14a01cbf8, type: 3}
+  explosionSFXVolume: 1
 --- !u!70 &8135064306374982523
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

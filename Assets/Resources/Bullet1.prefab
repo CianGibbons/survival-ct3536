@@ -119,6 +119,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletSpeed: 20
   bulletStrength: 10
+  explosion: {fileID: 8195025270916579049, guid: 77e547d01da41404899a9be6be4a8855,
+    type: 3}
+  explosionSFX: {fileID: 8300000, guid: 5e5ca07c7b4de994196a84f14a01cbf8, type: 3}
+  explosionSFXVolume: 1
 --- !u!70 &4931321574953801093
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

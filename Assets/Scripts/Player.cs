@@ -4,29 +4,32 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    // inspector level settings
+    [SerializeField] private GameObject InjuredBloodSplatter;
+    [SerializeField] private Transform firingPoint;
+    [SerializeField] private GameObject level1BulletPrefab;
+    [SerializeField] private GameObject level2BulletPrefab;
+    [SerializeField] private GameObject level3BulletPrefab;
+    [SerializeField] private GameObject PlayerBarsPrefab;
+    [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private AudioClip shootLaserSFX;
+    [SerializeField] [Range(0, 1)] private float shootLaserSFXVolume = 1f;
+
+    // class level public variables
     public float moveSpeed;
     public float maxHealth;
     public float maxArmour;
-    public Rigidbody2D rb;
-    private Vector2 move;
-    private Vector2 mousePosition;
-    public Transform firingPoint;
-    
-    public GameObject level1BulletPrefab;
-    public GameObject level2BulletPrefab;
-    public GameObject level3BulletPrefab;
 
-    public GameObject PlayerBarsPrefab;
-    
+    // class level public statics
     public static GameObject PlayerBars;
 
+    // class level private variables 
     private BarManager HealthBar;
     private BarManager ArmourBar;
     private GameObject bulletPrefab;
     private int currentWeaponLevel;
-
-
-
+    private Vector2 move;
+    private Vector2 mousePosition;
 
     private void Start()
     {
@@ -89,6 +92,7 @@ public class Player : MonoBehaviour
     {
         // instantiating a bullet at the firing point position (top of gun) with the same rotation as the firing point
         GameObject bullet = Instantiate(bulletPrefab, firingPoint.position, firingPoint.rotation);
+        AudioSource.PlayClipAtPoint(shootLaserSFX, firingPoint.position, shootLaserSFXVolume); // volume is from 0 to 1
     }
 
     public void TakeDamage(float enemyStrength)
@@ -108,10 +112,13 @@ public class Player : MonoBehaviour
             }
         }
         HealthBar.Damage(damageToBeTaken); // take any remaining damage on the health bar (at this stage the armor has been depleted)
+       
+        //Play the Visual Damage Taken Particle System
+        GameObject blood1 = Instantiate(InjuredBloodSplatter, transform.position, transform.rotation) as GameObject;
+        Destroy(blood1, 1f);
 
 
-
-        if(HealthBar.GetHealth() <= 0)
+        if (HealthBar.GetHealth() <= 0)
         {
             //Dead - call GameOver()
             GameManager.GameOver();

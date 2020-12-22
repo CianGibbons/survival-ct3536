@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class BarManager : MonoBehaviour
 {
 
-    public Slider slider; // The slider for the current bar
+    [SerializeField] private Slider slider; // The slider for the current bar
 
 
     public void SetHealth(float health) // set the slider value for the current bar

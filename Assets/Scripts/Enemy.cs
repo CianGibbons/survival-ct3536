@@ -6,6 +6,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     // Allow these private fields to be seen in the Inspector
+    //inspector settings
     [SerializeField] private float maxHealth;
     [SerializeField] private BarManager HealthBar;
     [SerializeField] private float enemyStrength;
@@ -15,16 +16,24 @@ public class Enemy : MonoBehaviour
     [SerializeField] private GameObject enemyBullet;
     [SerializeField] private GameObject DeadBloodSplatter;
     [SerializeField] private GameObject InjuredBloodSplatter;
+    [SerializeField] private bool CloseRangeEnemy;
+    [SerializeField] private AudioClip shootLaserSFX;
+    [SerializeField] [Range(0, 1)] private float shootLaserSFXVolume = 1f;
+    [SerializeField] private AudioClip enemySplatSFX;
+    [SerializeField] [Range(0,1)] private float enemySplatSFXVolume = 1f;
+    [SerializeField] private AudioClip meleeAttackSFX;
+    [SerializeField] [Range(0, 1)] private float meleeAttackSFXVolume = 1f;
+
+    //class level private variables
     private float lastAttackingTime = 0f;
+    private GameObject player;
+    private Rigidbody2D rb;
+    private Rigidbody2D targetRB;
+    private EnemyMovement MovementSystem;
+    private float viewDistance;
+
     
-    GameObject player;
-    Rigidbody2D rb;
-    Rigidbody2D targetRB;
-    EnemyMovement MovementSystem;
-    float viewDistance;
-
-    public bool CloseRangeEnemy;
-
+    // private statics
     // keeping a list of all the current enemies alive
     private static List<GameObject> enemies = new List<GameObject>();
 
@@ -110,7 +119,9 @@ public class Enemy : MonoBehaviour
                 enemies.Remove(this.transform.parent.gameObject);
                 //Debug.Log("Enemies Present: " + enemies.Count);
                 Destroy(this.gameObject.transform.parent.gameObject); // if the enemy's health runs out, destroy the enemy
-
+                // Play the splat sound effect - playing it close to the camera as the audio listener is on the camera and we want this louder
+                AudioSource.PlayClipAtPoint(enemySplatSFX, Camera.main.transform.position, enemySplatSFXVolume); // volume goes from 0 to 1
+                // play the splat particle effect
                 GameObject blood = Instantiate(DeadBloodSplatter) as GameObject;
                 blood.transform.position = this.transform.position;
                 Destroy(blood,1f);
@@ -154,8 +165,10 @@ public class Enemy : MonoBehaviour
         //Make player take damage
         Player p = player.GetComponent<Player>(); // get the Player component off the player GameObject so that we can access methods in the Player Script.
         if(p != null) p.TakeDamage(enemyStrength); // Damage the player with the current enemy's strength
+        AudioSource.PlayClipAtPoint(meleeAttackSFX, firingPointTransform.position, meleeAttackSFXVolume); // volume is from 0 to 1
+        GameObject blood1 = Instantiate(InjuredBloodSplatter, transform.position, transform.rotation) as GameObject;
+        Destroy(blood1, 1f);
 
-      
     }
 
     public void TakeDamage(float damage)
@@ -182,6 +195,8 @@ public class Enemy : MonoBehaviour
     public void ShootAtPlayer()
     {
         GameObject bullet = Instantiate(enemyBullet, firingPointTransform.position, firingPointTransform.rotation);
+        // this method receives the AudioClip, the Vector3 position of where to play audio and finally the volume of the sound effect.
+        AudioSource.PlayClipAtPoint(shootLaserSFX, firingPointTransform.position, shootLaserSFXVolume); // volume is from 0 to 1
     }
 
 }

@@ -5,7 +5,6 @@ using UnityEngine;
 public class Square
 {
     //Declarations
-    private MyGrid grid;
     public int x, y, g, f , h;
     public bool canWalkOnSquare;
     public Square previousSquare;
@@ -14,10 +13,9 @@ public class Square
     // G is the known cost from the start to the current node
     // H is the estimated cost from this node to the destination node
 
-    public Square(MyGrid grid, int x, int y)
+    public Square(int x, int y)
     {
         //Initializations
-        this.grid = grid;
         this.x = x;
         this.y = y;
         canWalkOnSquare = true;

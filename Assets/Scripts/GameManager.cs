@@ -14,21 +14,26 @@ public class GameManager : MonoBehaviour
     }
 
     //inspector settings
-    public GameObject TitlePageCanvas, PlayingCanvas, LeaderboardCanvas, GameOverCanvas;
-    public GameObject playerPrefab;
-    public GameObject enemyGameObject;
-    public GameObject longRangeEnemyGameObject;
-    public GameObject playerSpawnPosition;
-    public GameObject enemySpawnPoints;
-    public TMP_Text txtScore;
-    public TMP_Text txtWeaponLevel;
-    public TMP_Text txtWaveNumber;
-    public Button playButton;
-    public Button leaderboardButton;
-    public Button leaderboardReturnButton;
-    public Button submitNameButton;
-    public Camera gameCamera;
-    public TMP_InputField inputNameField;
+    [SerializeField] private GameObject TitlePageCanvas, PlayingCanvas, LeaderboardCanvas, GameOverCanvas;
+    [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private GameObject enemyGameObject;
+    [SerializeField] private GameObject longRangeEnemyGameObject;
+    [SerializeField] private GameObject playerSpawnPosition;
+    [SerializeField] private GameObject enemySpawnPoints;
+    [SerializeField] private GameObject LinesInTheLeaderboard;
+    [SerializeField] private TMP_Text txtScore;
+    [SerializeField] private TMP_Text txtWeaponLevel;
+    [SerializeField] private TMP_Text txtWaveNumber;
+    [SerializeField] private Button playButton;
+    [SerializeField] private Button leaderboardButton;
+    [SerializeField] private Button leaderboardReturnButton;
+    [SerializeField] private Button submitNameButton;
+    [SerializeField] private Camera gameCamera;
+    [SerializeField] private TMP_InputField inputNameField;
+    [SerializeField] private Image audioButtonImage;
+    [SerializeField] private Sprite audioOn;
+    [SerializeField] private Sprite audioOff;
+
 
 
     // class level statics
@@ -39,35 +44,45 @@ public class GameManager : MonoBehaviour
     public static MyGrid grid;
     public static int score = 0;
     private static int waveNumber = 0;
-    private static Leaderboard leaderboard;
-    
-    
+    private static Leaderboard leaderboard; 
     private static int weaponLevel;
-
-    private bool isPlaying = false;
-
     private static int numberOfEnemiesSpawned = 0;
+
+    //class level variable
+    private bool isPlaying = false;
+    private Sprite activeAudioSprite;
+    
 
 
     // Start is called before the first frame update
     private void Start()
     {
         instance = this;
+
         leaderboard = this.gameObject.GetComponent<Leaderboard>();
+        
         LeaderboardCanvas.SetActive(false);
+
+        // Set the image that is currently active on the audio button to be the audio on by default
+        activeAudioSprite = audioOn;
+        
         // Create our AStar Pathfinder object with a Grid Map that is 180 wide, 180 high and is located at the origin
         pathfinder = new AStar(180, 180, new Vector3(0, 0, 0));
         // Get the Grid
         grid = AStar.instance.GetGrid();
 
+        //Set up the Event Listeners for the Buttons
         playButton.onClick.AddListener(StartGame);
         leaderboardButton.onClick.AddListener(ShowLeaderBoard);
         leaderboardReturnButton.onClick.AddListener(HideLeaderBoard);
         submitNameButton.onClick.AddListener(GetNameFromField);
+        
+        //hide the game over canvas
         GameOverCanvas.SetActive(false);
+        // set the first game state to be menu
         SetGameState(GAMESTATES.MENU);
 
-
+        //PlayerPrefs.DeleteAll();
     }
 
     private void Update()
@@ -86,33 +101,37 @@ public class GameManager : MonoBehaviour
         }
         */
 
-  
+        // if the player is currently playing 
         if (instance.isPlaying) {
+            // if the player has cleared the current wave
             if (Enemy.GetList().Count == 0)
             {
+                // Call the next wave
                 NextWave();
-               
             }
-            if (score > 1500 && weaponLevel == 1)
+            // once the score is greater than 1500, upgrade the users bullet type from level 1 to level 2.
+            if (score > 2000 && weaponLevel == 1)
             {
-                weaponLevel++;
-                txtWeaponLevel.text = "Weapon Level: " + weaponLevel;
-                player.UpgradeWeapon();
+                weaponLevel++; // increment the weapon level
+                txtWeaponLevel.text = "Weapon Level: " + weaponLevel; // set the set on the canvas so the user can see the level weapon they have
+                player.UpgradeWeapon(); // upgrade the enemies weapon
             }
+            // once the score is greater than 5000, upgrade the users bullet type from level 2 to level 3.
             if (score > 5000 && weaponLevel == 2)
             {
-                weaponLevel++;
-                txtWeaponLevel.text = "Weapon Level: " + weaponLevel;
-                player.UpgradeWeapon();
+                weaponLevel++; // increment the weapon level
+                txtWeaponLevel.text = "Weapon Level: " + weaponLevel; // set the set on the canvas so the user can see the level weapon they have
+                player.UpgradeWeapon(); // upgrade the enemies weapon
             }
         }
     }
 
-    private void StartGame()
+    private void StartGame() // start the game
     {
-        waveNumber = 0;
-        score = 0;
-        weaponLevel = 1;
+        
+        waveNumber = 0; // initialize the wave number to 0
+        score = 0; // initialize the score to 0
+        weaponLevel = 1; // initialize the weapon level to 1
         SetGameState(GAMESTATES.PLAYING);
         SpawnPlayer();
         NextWave();
@@ -135,6 +154,16 @@ public class GameManager : MonoBehaviour
         instance.LeaderboardCanvas.transform.GetChild(1).gameObject.SetActive(false); // hide game over
         instance.LeaderboardCanvas.transform.GetChild(2).gameObject.SetActive(false); // hide better luck next time
         instance.LeaderboardCanvas.transform.GetChild(3).gameObject.SetActive(false); // hide congratulations
+        CursorController.instance.SetToNavigationCursor(); // set the mouse cursor to be the navigation cursor
+
+        // If there exists only the template line as a child of lines in the leaderboard
+        //Debug.Log(LinesInTheLeaderboard.transform.childCount);
+        if (LinesInTheLeaderboard.transform.childCount == 1)
+        {
+            // show the "Be the first to make the leaderboard" text
+            instance.LeaderboardCanvas.transform.GetChild(4).gameObject.SetActive(true);
+        }
+        else { instance.LeaderboardCanvas.transform.GetChild(4).gameObject.SetActive(false); }
     }
     private void HideLeaderBoard() {
         SetGameState(GAMESTATES.MENU);
@@ -162,8 +191,10 @@ public class GameManager : MonoBehaviour
 
         // show game over canvas
         instance.GameOverCanvas.SetActive(true);
+        instance.GameOverCanvas.transform.GetChild(5).gameObject.SetActive(false);
         if (isScoreToGoOnLeaderboard)
         {
+            CursorController.instance.SetToNavigationCursor(); // set the mouse cursor to be the navigation cursor
             // show input Name object
             instance.GameOverCanvas.transform.GetChild(2).gameObject.SetActive(true);
             // hide better luck next time text
@@ -184,6 +215,7 @@ public class GameManager : MonoBehaviour
             instance.LeaderboardCanvas.transform.GetChild(1).gameObject.SetActive(true); // show game over
             instance.LeaderboardCanvas.transform.GetChild(2).gameObject.SetActive(true); // show better luck next time
             instance.LeaderboardCanvas.transform.GetChild(3).gameObject.SetActive(false); // hide congratulations
+            instance.LeaderboardCanvas.transform.GetChild(4).gameObject.SetActive(false); // hide "Be the first to make the leaderboard"
         }
        
        
@@ -236,11 +268,13 @@ public class GameManager : MonoBehaviour
             case GAMESTATES.MENU:
                 instance.TitlePageCanvas.SetActive(true);
                 instance.PlayingCanvas.SetActive(false);
+                CursorController.instance.SetToNavigationCursor();
                 break;
             case GAMESTATES.PLAYING:
                 instance.TitlePageCanvas.SetActive(false);
                 instance.PlayingCanvas.SetActive(true);
                 instance.txtWeaponLevel.text = "Weapon Level: " + weaponLevel;
+                CursorController.instance.SetToCrossHairCursor();
                 break;
         }
     }
@@ -254,19 +288,41 @@ public class GameManager : MonoBehaviour
     private void GetNameFromField()
     {
         string name = inputNameField.text;
-        inputNameField.text = ""; // resetting the text field for the next player
-        // send name and score to the CheckScore method
-        leaderboard.CheckScore(name,score);
-        // hide input name object
-        instance.GameOverCanvas.transform.GetChild(2).gameObject.SetActive(false);
+        if (name == "")
+        {
+            instance.GameOverCanvas.transform.GetChild(5).gameObject.SetActive(true);
+        }
+        else {
+            inputNameField.text = ""; // resetting the text field for the next player
+                                      // send name and score to the CheckScore method
+            leaderboard.CheckScore(name, score);
+            // hide input name object
+            instance.GameOverCanvas.transform.GetChild(2).gameObject.SetActive(false);
 
-        // show leaderboard
-        instance.ShowLeaderBoard(); // show leaderboard
-                                    //show game over text and better luck next time
-        instance.LeaderboardCanvas.transform.GetChild(1).gameObject.SetActive(true); // show game over
-        instance.LeaderboardCanvas.transform.GetChild(3).gameObject.SetActive(true); // show congratulations
-        instance.LeaderboardCanvas.transform.GetChild(2).gameObject.SetActive(false); // hide better luck next time
+            // show leaderboard
+            instance.ShowLeaderBoard(); // show leaderboard
+                                        //show game over text and better luck next time
+            instance.LeaderboardCanvas.transform.GetChild(1).gameObject.SetActive(true); // show game over
+            instance.LeaderboardCanvas.transform.GetChild(3).gameObject.SetActive(true); // show congratulations
+            instance.LeaderboardCanvas.transform.GetChild(2).gameObject.SetActive(false); // hide better luck next time
+        }
+        
 
 
     }
+
+    public void MuteAudio()
+    {
+        AudioListener.pause = !AudioListener.pause;
+        if(activeAudioSprite == instance.audioOn)
+        {
+            activeAudioSprite = instance.audioOff;
+            
+        } else
+        {
+            activeAudioSprite = instance.audioOn;
+        }
+        audioButtonImage.sprite = activeAudioSprite;
+    }
+    
 }

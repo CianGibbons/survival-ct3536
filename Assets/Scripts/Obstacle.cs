@@ -24,10 +24,6 @@ public class Obstacle : MonoBehaviour
         //Debug.Log("Square TL: " + topLeftCorner);
         //Debug.Log("Square BR: " + bottomRightCorner);
 
-
-
-        //GameManager.instance.pathfinder.GetGrid().GetGridSquare(x,y).SetIfSquareIsWalkable(false);
-
         //Declaring x and y -  these are to be used in the for loops
         int x;
         int y;
@@ -47,9 +43,4 @@ public class Obstacle : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

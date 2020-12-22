@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class AStar
 {
+
+    //class level private variables
+
     // The cost of moving straight and the cost of moving diagonally
     private const int StraightMoveCost = 10; // this is the cost of moving up, down, left or right
-    
     
     // this is calculated by getting the square root of 200
     private const int DiagonalMoveCost = 14; // This is the cost of moving diagonally to the Top Left/Top Right/Bottom Left/Bottom Right from the Center
@@ -16,11 +18,14 @@ public class AStar
     private List<Square> openList;
     private List<Square> closedList;
 
+    private MyGrid grid; //Declaring the grid
+
+    // Class level statics
     // Declaring an instance of the AStar Pathfinder
     public static AStar instance { get; private set; } // this makes it publically readonly but within this class it can be set
     // so other classes can get the instance but cannot edit the instance
 
-    private MyGrid grid; //Declaring the grid
+    
 
     public AStar(int width, int height, Vector3 location)
     {

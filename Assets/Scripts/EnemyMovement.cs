@@ -4,19 +4,21 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
-    public float viewDistance;
-    private List<Vector3> pathToFollow;
-    private int indexOfCurrentSquareOnList;
-
-    public Transform firingPointTransform;
-    public Rigidbody2D enemyRB;
-
+    // inspector settings
     [SerializeField] private float moveSpeed;
     [SerializeField] private float attackingRange;
-    
+    [SerializeField] private Transform firingPointTransform;
+    [SerializeField] private Rigidbody2D enemyRB;
+
+    //class level private variables
+    private List<Vector3> pathToFollow;
+    private int indexOfCurrentSquareOnList;
+    private GameObject player;
+
+    //class level public variables
+    public float viewDistance;
     public bool CloseRangeEnemy;
 
-    GameObject player;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,12 +26,13 @@ public class EnemyMovement : MonoBehaviour
     }
 
     
+    //Using Raycasting i check if the enemy has the player in sight
     private bool CheckIfPlayerIsInSight()
     {
-        Vector3 directionToPlayer = player.transform.position - firingPointTransform.position;
-        RaycastHit2D rayCastHit = Physics2D.Raycast(firingPointTransform.position, directionToPlayer);
-        //Debug.DrawRay(firingPointTransform.position, directionToPlayer);
-        if (rayCastHit.collider != null)
+        Vector3 directionToPlayer = player.transform.position - firingPointTransform.position; // getting the directional vector to the player
+        RaycastHit2D rayCastHit = Physics2D.Raycast(firingPointTransform.position, directionToPlayer); // casting the ray from the ray from the firing points position to the player
+        Debug.DrawRay(firingPointTransform.position, directionToPlayer); // drawing a gizmos ray for debugging reasons
+        if (rayCastHit.collider != null) // if the ray collides with something
         {
             if(rayCastHit.collider.gameObject.tag == "Player")// if the player is in sight, return true
             {
@@ -37,7 +40,7 @@ public class EnemyMovement : MonoBehaviour
             }
            // bullets are ignored using the ignore raycast layer
         }
-        return false;
+        return false; // the collision is not the player, return false
     }
 
     // Update is called once per frame
