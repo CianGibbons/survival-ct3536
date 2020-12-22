@@ -61,24 +61,22 @@ public class EnemyMovement : MonoBehaviour
 
     public bool CloseEnoughToAttack() // this is to test that the enemy is close enough to attack the player
     {
-        // note to self: later i might implement long range players, here i would set the path to the player to be null so that my enemy will stop moving towards the player
-        if (DistanceToPlayer() <= attackingRange) return true; 
-
-        return false;
+        if (DistanceToPlayer() <= attackingRange) return true; // if the distance from the current enemy to the player is less than or equal to the attacking range return true as the enemy is close enough to attack 
+        return false;// the enemy is not close enough to attack, return false
     }
 
-    private void GetTarget()
+    private void GetTarget() // uses A* to get the path to the player
     {   
         //Debug.Log("MoveToPlayer() Called");
         indexOfCurrentSquareOnList = 0; // start at the first square in the list
-        pathToFollow = AStar.instance.FindPath(transform.position, player.transform.position); // get the list of positional vectors to move to to get to the player
+        pathToFollow = AStar.instance.FindPath(transform.position, player.transform.position); // get the list of positional vectors to move to, to get to the player
 
         if(pathToFollow != null && pathToFollow.Count > 1) // no need to move from where the enemy is starting to the first square as the first square is where the enemy is standing!!
         {
-            pathToFollow.RemoveAt(0);
+            pathToFollow.RemoveAt(0); // removing the first square
         }
 
-        //THIS IS FOR TESTING PURPOSES AND IS TO BE COMMENTED OUT WHEN TESTING A* IS FINISHED
+        //THIS IS FOR TESTING PURPOSES
         //Used for Drawing Gizmos to help debug the A*
         for (int i = 0; i < pathToFollow.Count - 1; i++) // loop through each square on the path that the enemy is to follow
         {
@@ -95,7 +93,7 @@ public class EnemyMovement : MonoBehaviour
         {
             Vector3 target = pathToFollow[indexOfCurrentSquareOnList]; // set the current target for the enemy to move towards
             //Debug.Log(DistanceToPlayer());
-            if (CloseRangeEnemy)
+            if (CloseRangeEnemy) // if the enemy is a close range enemy - they have to travel close to the enemy to attack
             {
                 if (DistanceToPlayer() > 2f) // if the distance to the player is greater than 2f 
                 {
@@ -114,8 +112,8 @@ public class EnemyMovement : MonoBehaviour
             } else
             {
                 
-                if (DistanceToPlayer() > 15f || !CheckIfPlayerIsInSight()) // if the distance to the player is greater than 2f 
-                {
+                if (DistanceToPlayer() > 15f || !CheckIfPlayerIsInSight()) // if the distance to the player is greater than 15f or the player isnt in direct line of sight to shoot at
+                {// keep chasing the player
                     Vector3 direction = (target - transform.position).normalized; // get the normalized directional vector to the target
                     transform.position = transform.position + direction * moveSpeed * Time.deltaTime; // move towards the target at moveSpeed speed
                 }

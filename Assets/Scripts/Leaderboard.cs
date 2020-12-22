@@ -7,10 +7,11 @@ using TMPro;
 
 public class Leaderboard : MonoBehaviour
 {
-    
+    // inspector settings
     [SerializeField] private GameObject LinesInTheLeaderboard;
     [SerializeField] private GameObject LineInLeaderboard;
-
+    
+    // declaring the list of line objects
     private List<LeaderboardLine> leaderboardLines;
 
     //place every line 30 below the one before
@@ -25,8 +26,8 @@ public class Leaderboard : MonoBehaviour
         nextPosition = LineInLeaderboard.transform.position; // set the next position for a new line in the leaderboard
 
         leaderboardLines = new List<LeaderboardLine>(); // create a blank list
-        LoadList(); // load the list from PlayerPrefs into leaderboadLines list
-        leaderboardLines = SortList(leaderboardLines); // sort the list by score to ensure it is in order
+        LoadList(); // load the list from PlayerPrefs into leaderboadLines list - this gets any existing lines from the playerprefs and adds them to the list
+        leaderboardLines = SortList(leaderboardLines); // sort the list by score to ensure it is in order 
         
         foreach(LeaderboardLine l in leaderboardLines) // loop through each line in the list
         {
@@ -42,15 +43,15 @@ public class Leaderboard : MonoBehaviour
         //Update the entries on the leaderboard
         nextPosition = LineInLeaderboard.transform.position; // reset the next position to be the position of the template 
         nextIntPositionOnLeaderboard = 1; // next place available on the leaderboard is 1st place as there is nothing on the leaderboard
-        int numberOfChildren = LinesInTheLeaderboard.transform.childCount; // count the children in the LinesInTheLEaderboard object
-        if (numberOfChildren > 1) // if there is more than just the template, delete them - keep the template
+        int numberOfChildren = LinesInTheLeaderboard.transform.childCount; // count the children in the LinesInTheLeaderboard object
+        if (numberOfChildren > 1) // if there is more than just the template, delete them - keep the template - we dont want duplication of lines
         {
             for (int i = 1; i < numberOfChildren; i++) // loop through the children - skipping the template one that is at index 0
             {
                 Destroy(LinesInTheLeaderboard.transform.GetChild(i).gameObject); // destroy the gameobjects one by one
             }
         }
-        leaderboardLines = SortList(leaderboardLines);// sort the stored list of placings on the leaderboard
+        leaderboardLines = SortList(leaderboardLines);// sort the stored list of lines on the leaderboard
         foreach (LeaderboardLine l in leaderboardLines)// loop through each line and create a gameobject for it
         {
             CreateLineInLeaderboard(l);// create a game object with the values taken from the current leaderboard line
@@ -115,7 +116,7 @@ public class Leaderboard : MonoBehaviour
         List<LeaderboardLine> lines = new List<LeaderboardLine>();
         // Debug.Log(lines.Count);
 
-        bool toBeAddedToList = false; // new name and score not to be added to the list   
+        bool toBeAddedToList = false; // new name and score not to be added to the list by default
         for (int i = 1; i < 11; i++) // loop from 1 to 10
         {
             string temp = "leaderboardItem" + i; // string to load PlayerPref with
@@ -134,7 +135,7 @@ public class Leaderboard : MonoBehaviour
                 //Debug.Log(lines.Count);
             } else
             {
-                // string with length 0 found - therefore a blank line in the list
+                // string with length 0 found - therefore a blank line in the list - the new line can be placed here
                 toBeAddedToList = true;
             }
         }
@@ -165,7 +166,7 @@ public class Leaderboard : MonoBehaviour
 
     private List<LeaderboardLine> SortList(List<LeaderboardLine> list)
     {
-        //sorting the list  by its score from best to worse ie. largest to smallest
+        //sorting the list by its score from best to worse ie. largest to smallest
         for (int i = 0; i < list.Count; i++)
         { // loop from starting line
             for (int j = i + 1; j < list.Count; j++) // loop from the line after the starting line
@@ -202,6 +203,7 @@ public class Leaderboard : MonoBehaviour
 
     private void ClearLeaderboards()
     {
+        // clears the leaderboard by clearing the playerprefs and the leaderboard lines
         PlayerPrefs.DeleteAll();
         leaderboardLines.Clear();
     }

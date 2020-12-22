@@ -238,8 +238,8 @@ public class AStar
         int distX = Mathf.Abs(start.x - dest.x); // distance across
         int distY = Mathf.Abs(start.y - dest.y); // distance up
         
+        
         //int distToGo = Mathf.Abs(distX - distY); // distance that's left
-
         //return StraightMoveCost * distToGo + DiagonalMoveCost * Mathf.Min(distX, distY); // return the calculation of the distance keeping in mind the cost of the move
 
         return StraightMoveCost * (distX + distY) + (DiagonalMoveCost - 2 * StraightMoveCost) * Mathf.Min(distX, distY);

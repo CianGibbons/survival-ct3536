@@ -15,25 +15,27 @@ public class HealthPack : MonoBehaviour
 
     private void Start()
     {
+        // initialized the time spawned
         timeSpawned = Time.time;
         //Debug.Log(timeSpawned);
     }
     private void Update()
     {
-        if(Time.time > timeSpawned + timeToLive && !StartedExpiring)
+        if(Time.time > timeSpawned + timeToLive && !StartedExpiring) // ensures than after timeToLive seconds (10) the health pack will start to expire and that this method will only be called once
         {
             StartedExpiring = true;
-            StartCoroutine(StartExpiring(transform.GetComponent<SpriteRenderer>()));
+            StartCoroutine(StartExpiring(transform.GetComponent<SpriteRenderer>())); // passed in the sprite renderer so i can adjust the alpha value
         }
     }
 
     void OnTriggerEnter2D(Collider2D collider)
     {
+        // ensuring the player can pickup the health boost
         if (collider.gameObject.tag == "Player")
         {
-            
+            // healing the player by the value of the health pack
             collider.gameObject.GetComponent<Player>().Heal(healthValue);
-            Destroy(this.gameObject);
+            Destroy(this.gameObject); // destroying the object as it has now been used
         }
     }
 
@@ -41,7 +43,7 @@ public class HealthPack : MonoBehaviour
     IEnumerator StartExpiring(SpriteRenderer sprite)
     {
         //Debug.Log("Starting to fade out");
-        Color SpriteColor = sprite.color;
+        Color SpriteColor = sprite.color; // storing the sprite's color so that we can manipulate it
         //initializing the change
         float change = 0;
         // initializing the rate of scaling
@@ -50,7 +52,7 @@ public class HealthPack : MonoBehaviour
         {
             //Debug.Log("Fading");
             SpriteColor.a -= Time.deltaTime / timeToFadeOut; // decreasing the alpha value at a rate in which it will reach 0 after timeToFadeOut seconds
-            change += Time.deltaTime * scalingRate; // making the change take the scaling rate and the time into accounnt
+            change += Time.deltaTime * scalingRate; // making the change take the scaling rate and the time into account
 
             // changing the scale of the health pack from transform.localScale, to Vector3.zero ie. {0,0,0}
             transform.localScale = Vector3.Lerp(transform.localScale, Vector3.zero, change);
@@ -58,11 +60,13 @@ public class HealthPack : MonoBehaviour
             {
                 SpriteColor.a = 0;
             }
-            // set the color to the transparent version
+            // set the color to the more transparent version
             sprite.color = SpriteColor;
             yield return null;
         }
+        // ensuring the color is set to the transparent version
         sprite.color = SpriteColor;
+        // destroying the gameobject as it has expired
         Destroy(this.gameObject);
         yield break;
     }

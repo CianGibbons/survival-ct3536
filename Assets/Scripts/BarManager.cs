@@ -26,7 +26,7 @@ public class BarManager : MonoBehaviour
     {
         float currentHealth = slider.value + extraHealth;
 
-        if (currentHealth > slider.maxValue) // ensure that the heal doesnt make the value exceed the maximum value
+        if (currentHealth > slider.maxValue) // ensure that the heal doesnt make the value exceed the maximum value -although i believe the slider would not allow this anyways
         {
             SetHealth(slider.maxValue);
         }
@@ -41,7 +41,7 @@ public class BarManager : MonoBehaviour
     {
         float currentHealth = slider.value - damage;
 
-        if (currentHealth < 0) // ensure that the bar doesnt go below the minimum
+        if (currentHealth < 0) // ensure that the bar doesnt go below the minimum - although i believe the slider would not allow this anyways
         {
             SetHealth(0);
         } else

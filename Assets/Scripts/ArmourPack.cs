@@ -14,35 +14,35 @@ public class ArmourPack : MonoBehaviour
 
     private void Start()
     {
+        // initialized the time spawned
         timeSpawned = Time.time;
         //Debug.Log(timeSpawned);
     }
     private void Update()
     {
-        if (Time.time > timeSpawned + timeToLive && !StartedExpiring)
+        if (Time.time > timeSpawned + timeToLive && !StartedExpiring)// ensures than after timeToLive seconds (10) the armour pack will start to expire and that this method will only be called once
         {
             StartedExpiring = true;
-            StartCoroutine(StartExpiring(transform.GetComponent<SpriteRenderer>()));
+            StartCoroutine(StartExpiring(transform.GetComponent<SpriteRenderer>())); // passed in the sprite renderer so i can adjust the alpha value
         }
     }
 
     void OnTriggerEnter2D(Collider2D collider)
     {
+        // ensuring the player can pickup the armour boost
         if (collider.gameObject.tag == "Player")
         {
-            
+            // healing the player's armour by the value of the armour pack
             collider.gameObject.GetComponent<Player>().HealArmour(armourValue);
-            Destroy(this.gameObject);
+            Destroy(this.gameObject); // destroying the object as it has now been used
         }
     }
 
 
     IEnumerator StartExpiring(SpriteRenderer sprite)
     {
-
-        
         //Debug.Log("Starting to fade out");
-        Color SpriteColor = sprite.color;
+        Color SpriteColor = sprite.color; // storing the sprite's color so that we can manipulate it
         //initializing the change
         float change = 0;
         // initializing the rate of scaling
@@ -63,7 +63,9 @@ public class ArmourPack : MonoBehaviour
             sprite.color = SpriteColor;
             yield return null;
         }
+        // ensuring the color is set to the transparent version
         sprite.color = SpriteColor;
+        // destroying the gameobject as it has expired
         Destroy(this.gameObject);
         yield break;
     }

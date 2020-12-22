@@ -34,9 +34,9 @@ public class CameraController : MonoBehaviour
             target = GameObject.FindWithTag("Player");
         } else
         {
-            cam.orthographicSize = 20f;
-            Vector3 PlayerPosition = target.transform.position;
-            PlayerPosition.z = transform.position.z; // same as default camera z
+            cam.orthographicSize = 20f; // if the player/target is found set the orthographic size (Zoom in the camera/lower the Field of View)
+            Vector3 PlayerPosition = target.transform.position; // get the players position and store it in this temporary variable
+            PlayerPosition.z = transform.position.z; // set the z of the temporary variable to be the same as the camera as we want the camera to keep is z and we are going to be moving towards this PlayerPosition positional vector
 
            
            
@@ -56,6 +56,6 @@ public class CameraController : MonoBehaviour
 
     public static void SetCameraPosition(Vector3 position)
     {
-        instance.transform.position = position;
+        instance.transform.position = position;//setter method for the camera position
     }
 }

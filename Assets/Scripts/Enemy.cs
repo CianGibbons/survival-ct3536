@@ -18,7 +18,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private GameObject InjuredBloodSplatter;
     [SerializeField] private bool CloseRangeEnemy;
     [SerializeField] private AudioClip shootLaserSFX;
-    [SerializeField] [Range(0, 1)] private float shootLaserSFXVolume = 1f;
+    [SerializeField] [Range(0, 1)] private float shootLaserSFXVolume = 1f; // ensure the volume sliders go between 0 and 1 min and max as the audio files play at volumes between 0 and 1
     [SerializeField] private AudioClip enemySplatSFX;
     [SerializeField] [Range(0,1)] private float enemySplatSFXVolume = 1f;
     [SerializeField] private AudioClip meleeAttackSFX;
@@ -47,7 +47,7 @@ public class Enemy : MonoBehaviour
         MovementSystem = transform.parent.gameObject.GetComponent<EnemyMovement>(); // get the movement system so that we can access it in this script
         viewDistance = MovementSystem.viewDistance; // get the view distance from the movement system
         
-        enemies.Add(this.transform.parent.gameObject);
+        enemies.Add(this.transform.parent.gameObject); // adding the current enemy to the list of enemies
 
         
     }
@@ -71,12 +71,13 @@ public class Enemy : MonoBehaviour
             //Vector3 direction = (player.transform.position - transform.position).normalized;
             //Vector3 OriginalPosition = transform.position;
             //transform.position = player.transform.position + direction * 10f * Time.deltaTime; // 10 is the attackSpeed
-
-
-
             //transform.position = OriginalPosition + direction*-1f * 10f * Time.deltaTime;
 
-            if (CloseRangeEnemy)
+            //
+            // I added in a particle system to replace the above code that is commented out
+            //
+
+            if (CloseRangeEnemy) // if the enemy is a close range enemy
             {
                 // Can attack every half of a second
                 if (lastAttackingTime + 0.5f <= Time.time)
@@ -86,12 +87,11 @@ public class Enemy : MonoBehaviour
                 }
             } else
             {
-                // Can attack every  second
+                // Can attack every second
                 if (lastAttackingTime + 1f <= Time.time)
                 {
                     lastAttackingTime = Time.time; // set the last time that the enemy has attacked to be the time now
-                    //Attack(); // attack the player
-
+                    // shoot at the player
                     ShootAtPlayer();
                 }
             }
@@ -108,24 +108,28 @@ public class Enemy : MonoBehaviour
             float bulletStrength = collision.gameObject.GetComponent<Bullet>().GetBulletStrength(); // get the strength of the bullet shot by the player
             TakeDamage(bulletStrength); // upon the collision of the bullet, take damage from the bullet. 
             //Debug.Log(bulletStrength);
+            // upon getting hit by a bullet make the enemy appear to spill a drop of blood using the particle system object
             GameObject blood1 = Instantiate(InjuredBloodSplatter, transform.position, transform.rotation) as GameObject;
-            Destroy(blood1, 1f);
+            Destroy(blood1, 1f); // destroy it after 1 second
 
-            if (HealthBar.GetHealth() <= 0)
+            if (HealthBar.GetHealth() <= 0) // if the enemy has run out of health
             {
-                if (CloseRangeEnemy) { GameManager.SetScore(GameManager.score + 100); }
-                else { GameManager.SetScore(GameManager.score + 250); }
+                // give the player score
+                if (CloseRangeEnemy) { GameManager.SetScore(GameManager.score + 100); } // 100 points for normal enemies
+                else { GameManager.SetScore(GameManager.score + 250); } // 250 points for long ranged enemies
                 
+                // remove the enemy from the list of enemies
                 enemies.Remove(this.transform.parent.gameObject);
                 //Debug.Log("Enemies Present: " + enemies.Count);
-                Destroy(this.gameObject.transform.parent.gameObject); // if the enemy's health runs out, destroy the enemy
+                Destroy(this.gameObject.transform.parent.gameObject); // destroy the enemy
                 // Play the splat sound effect - playing it close to the camera as the audio listener is on the camera and we want this louder
                 AudioSource.PlayClipAtPoint(enemySplatSFX, Camera.main.transform.position, enemySplatSFXVolume); // volume goes from 0 to 1
                 // play the splat particle effect
                 GameObject blood = Instantiate(DeadBloodSplatter) as GameObject;
-                blood.transform.position = this.transform.position;
-                Destroy(blood,1f);
+                blood.transform.position = this.transform.position; // setting the position of the effect to be on the position of the enemies death
+                Destroy(blood,1f); // destroy after 1 second
 
+                //creating a randomizer to allow for random seeded number generation
                 System.Random randomizer = new System.Random();
                 int chanceOfBoost = randomizer.Next(101); // get random number between 0 and 100;
                 if(chanceOfBoost >= 75) // if the number is greater or equal to 75, spawn a boost
@@ -159,15 +163,14 @@ public class Enemy : MonoBehaviour
 
     private void Attack()
     {
-        // Make enemy lunge towards player and lunge back
-        //TODO
-
         //Make player take damage
         Player p = player.GetComponent<Player>(); // get the Player component off the player GameObject so that we can access methods in the Player Script.
         if(p != null) p.TakeDamage(enemyStrength); // Damage the player with the current enemy's strength
         AudioSource.PlayClipAtPoint(meleeAttackSFX, firingPointTransform.position, meleeAttackSFXVolume); // volume is from 0 to 1
-        GameObject blood1 = Instantiate(InjuredBloodSplatter, transform.position, transform.rotation) as GameObject;
-        Destroy(blood1, 1f);
+        
+        // spawning an extra drop of blood for dramatic effect
+        //GameObject blood1 = Instantiate(InjuredBloodSplatter, transform.position, transform.rotation) as GameObject;
+        //Destroy(blood1, 1f);
 
     }
 
@@ -189,11 +192,12 @@ public class Enemy : MonoBehaviour
     }
 
     public static List<GameObject> GetList() {
-        return enemies;
+        return enemies; //getter method for the list of enemies
     }
 
-    public void ShootAtPlayer()
+    public void ShootAtPlayer() // makes the long range enemy shoot at the player
     {
+        // spawn an enemy bullet at the enemies firing point with the same rotation as the firing point ie in the direction the enemy is facing
         GameObject bullet = Instantiate(enemyBullet, firingPointTransform.position, firingPointTransform.rotation);
         // this method receives the AudioClip, the Vector3 position of where to play audio and finally the volume of the sound effect.
         AudioSource.PlayClipAtPoint(shootLaserSFX, firingPointTransform.position, shootLaserSFXVolume); // volume is from 0 to 1

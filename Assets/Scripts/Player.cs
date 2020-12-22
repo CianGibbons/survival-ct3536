@@ -73,8 +73,10 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // Ensure the player is facing the mouse
+
         // move object to current position plus move Vector at moveSpeed speed
-        // multiply by Time to ensure that the move speed wont be changed by the amount of times FixedUpdate is called
+        // multiply by Time to ensure that the move speed wont be changed by the amount of times FixedUpdate is called and instead will act in relation to real time
         rb.MovePosition(rb.position + move * Time.fixedDeltaTime * moveSpeed);
         
         //rigidbody.MovePosition(rigidbody.position + move * moveSpeed); - this was causing player to Jump about the place due to the amount of times fixed update was called.
@@ -82,7 +84,7 @@ public class Player : MonoBehaviour
         //Subtracting the Vector2's of the mouse position and the player position to get the target direction
         Vector2 targetDirection = mousePosition - rb.position;
         //Calculating the angle for the rotation using atan method, this returns in radians so multiplied it by Rad2Deg which is a constant
-        // had to subtract 90 degrees as the Player sprite needed to be rotated.
+        // had to subtract 90 degrees as the Player sprite needed to be rotated accordingly.
         float angleToTarget = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg - 90f;
         //Apply the rotation
         rb.rotation = angleToTarget;
@@ -92,6 +94,7 @@ public class Player : MonoBehaviour
     {
         // instantiating a bullet at the firing point position (top of gun) with the same rotation as the firing point
         GameObject bullet = Instantiate(bulletPrefab, firingPoint.position, firingPoint.rotation);
+        // Play the sound for firing the laser
         AudioSource.PlayClipAtPoint(shootLaserSFX, firingPoint.position, shootLaserSFXVolume); // volume is from 0 to 1
     }
 
@@ -127,18 +130,18 @@ public class Player : MonoBehaviour
 
     public void HealArmour(int armour)
     {
-        ArmourBar.Heal(armour);
+        ArmourBar.Heal(armour); // heal the armour bar by the amount passed into the parameter of the method
     }
 
     public void Heal(int health)
     {
-        HealthBar.Heal(health);
+        HealthBar.Heal(health); // heal the health bar by the amount passed into the parameter of the method
     }
 
-    public void UpgradeWeapon()
+    public void UpgradeWeapon() // upgrade the players weapon type - steps were taken in the game manager to ensure that current weapon level never exceeds 3
     {
-        currentWeaponLevel++;
-        switch(currentWeaponLevel)
+        currentWeaponLevel++; // increment the level of the weapon
+        switch(currentWeaponLevel) // use a switch case to determine the bullet type off the weapon level
         {
             case 1: bulletPrefab = level1BulletPrefab; break;
             case 2: bulletPrefab = level2BulletPrefab; break;
@@ -152,7 +155,7 @@ public class Player : MonoBehaviour
         if (collision.gameObject.tag == "EnemyBullet") // if the game object that was collided with has a tag called "EnemyBullet"
         {
             float bulletStrength = collision.gameObject.GetComponent<Bullet>().GetBulletStrength(); // get the strength of the bullet shot by the enemy
-            TakeDamage(bulletStrength);
+            TakeDamage(bulletStrength); // make the player take damage from the bullet.
         }
     }
 }

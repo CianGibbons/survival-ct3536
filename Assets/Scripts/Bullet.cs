@@ -27,10 +27,11 @@ public class Bullet : MonoBehaviour
         
         if (collision.gameObject.tag == "Bullet" || collision.gameObject.tag == "EnemyBullet") // if the game object that was collided with was a bullet
         {
-
+            // play the explosion sound effect that i created
             AudioSource.PlayClipAtPoint(explosionSFX, transform.position, explosionSFXVolume); // volume is from 0 to 1
+            // play the explosion particle effect i created
             GameObject explosion1 = Instantiate(explosion, transform.position, Quaternion.identity); // instantiate an explosion at the position of the bullet -  "no rotation" - the object is perfectly aligned with the world ie its natural rotation
-            Destroy(explosion1, 0.5f);// destroy the explosion object after 1 seconds
+            Destroy(explosion1, 0.5f);// destroy the explosion object after 0.5 seconds
         }
         Destroy(gameObject); // destroy the bullet
 

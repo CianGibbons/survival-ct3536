@@ -26,19 +26,19 @@ public class MyGrid
             for (int y = 0; y < grid.GetLength(1); y++)
             {
                 grid[x, y] = new Square(x, y); // create a new square in the grid at x, y
-                //Draw the bottom and left lines for the square in the grid
+                //Draw the bottom and left lines for the square in the grid - can be viewed using Gizmos
                 Debug.DrawLine(GetSquareWorldPosition(x, y), GetSquareWorldPosition(x, y + 1), Color.white, 100f);
                 Debug.DrawLine(GetSquareWorldPosition(x, y), GetSquareWorldPosition(x + 1, y), Color.white, 100f);
             }
         }
-        //Draw the Horizontal and Vertical outside lines for the top and right of the grid
+        //Draw the Horizontal and Vertical outside lines for the top and right of the grid - can be viewed using Gizmos
         Debug.DrawLine(GetSquareWorldPosition(0, height), GetSquareWorldPosition(width, height), Color.white, 100f);
         Debug.DrawLine(GetSquareWorldPosition(width, 0), GetSquareWorldPosition(width, height), Color.white, 100f);
     }
 
     public int GetHeight() { return height; } // getter for the height of the grid in squares
     public int GetWidth() { return width; } // getter for the width of the grid in squares
-    public float GetSize() { return size; } // getter for the size of each square (size^2)
+    public float GetSize() { return size; } // getter for the size of each square - i.e. the length of each side (Everry square is 1x1, therefore size = 1)
 
     public Vector2 GetXAndY(Vector3 worldPos)
     {
@@ -86,6 +86,7 @@ public class MyGrid
     }
 
     public override string ToString() {
+        // this is a simple toString method I used to Debug 
         return "Grid Width: "+ width +"\nGrid Height: "+height;
     }
 }
