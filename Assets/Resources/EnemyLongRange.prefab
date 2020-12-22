@@ -134,7 +134,7 @@ MonoBehaviour:
     type: 3}
   CloseRangeEnemy: 0
   shootLaserSFX: {fileID: 8300000, guid: b5f3a57d2f9f3f447b301b09a17b7c2f, type: 3}
-  shootLaserSFXVolume: 0.75
+  shootLaserSFXVolume: 1
   enemySplatSFX: {fileID: 8300000, guid: 2aa169414082e7e40ae29754d14abcd9, type: 3}
   enemySplatSFXVolume: 0.75
   meleeAttackSFX: {fileID: 8300000, guid: 20171a355f831c04d8fe73d7e84ac43a, type: 3}
